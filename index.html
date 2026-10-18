@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QR Protect: check a QR code before it opens</title>
+<meta name="description" content="Scan a QR code and see where it goes before anything opens. Flags fake GCash, Maya and bank sites, app downloads and changed QR Ph payment codes.">
+<meta name="theme-color" content="#0e1a2b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <img src="icons/icon.svg" alt="" width="32" height="32">
+  <div class="brand">
+    <h1>QR Protect</h1>
+    <p>Scan a QR code and see where it goes before anything opens.</p>
+  </div>
+  <button id="installBtn" class="chip" hidden>Install</button>
+</header>
+
+<main>
+  <section class="scanner" aria-label="Camera">
+    <div class="viewfinder" id="viewfinder">
+      <video id="video" playsinline muted></video>
+      <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="cam-msg" id="camMsg">
+        <button id="startCam" class="btn gold">Start camera</button>
+        <p id="camNote"></p>
+      </div>
+      <button id="torchBtn" class="chip torch" hidden>Light</button>
+    </div>
+  </section>
+
+  <section class="inputs">
+    <label class="btn" for="filePick">Scan a picture</label>
+    <input id="filePick" type="file" accept="image/*" hidden>
+    <form id="textForm" class="paste">
+      <input id="textIn" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste a link or code text" aria-label="Link or code text">
+      <button class="btn" type="submit">Check</button>
+    </form>
+  </section>
+
+  <section class="history" id="historyBox" hidden>
+    <div class="row-head">
+      <h2>Recent scans</h2>
+      <button id="clearHistory" class="link">Clear</button>
+    </div>
+    <ul id="historyList"></ul>
+  </section>
+
+  <section class="about">
+    <h2>How to use it</h2>
+    <ol>
+      <li>Point the camera at the code, or pick a screenshot of one from Messenger or Viber.</li>
+      <li>Read the site name in large letters and the checks under it.</li>
+      <li>Open the link if it matches what you expected. Close it if it shows red.</li>
+    </ol>
+    <h2>Scan with this in place of your camera app</h2>
+    <p>Your phone's camera app opens a link as soon as it reads the code. Install QR Protect to your home screen and scan from here, and use Share on a screenshot to send it to QR Protect.</p>
+    <h2>Payment codes</h2>
+    <p>A QR Ph code shows the name of the account receiving the money. Scammers put their own sticker over a store's code, so check that the name matches the store before you pay.</p>
+    <p class="fine">No file uploaded.</p>
+  </section>
+</main>
+
+<div class="sheet-bg" id="sheetBg" hidden></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="rTitle" hidden>
+  <div class="grab" aria-hidden="true"></div>
+  <div class="verdict" id="rVerdict">
+    <span class="pill" id="rPill"></span>
+    <span class="kind" id="rKind"></span>
+  </div>
+  <h2 id="rTitle"></h2>
+  <div class="many" id="rMany" hidden></div>
+  <div class="site" id="rSite" hidden>
+    <span class="site-label">Goes to</span>
+    <span class="site-reg" id="rReg"></span>
+    <span class="site-full" id="rFull"></span>
+  </div>
+  <ul class="findings" id="rFindings"></ul>
+  <dl class="details" id="rDetails"></dl>
+  <div class="actions" id="rActions"></div>
+  <p class="note" id="rNote" hidden>Opens in your regular browser. Never type an MPIN, OTP or password on a page you reached from a QR code.</p>
+  <button class="btn wide" id="againBtn">Scan again</button>
+</section>
+
+<dialog id="confirmBox">
+  <p id="confirmText"></p>
+  <div class="dialog-row">
+    <button class="btn" id="confirmNo">Cancel</button>
+    <button class="btn red" id="confirmYes">Open</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="work" hidden></canvas>
+
+<script src="vendor/zxing/zxing-reader.js"></script>
+<script src="vendor/jsQR.js"></script>
+<script src="analyze.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
